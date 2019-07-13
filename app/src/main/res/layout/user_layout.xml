@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="10dp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Task"
+                android:id="@+id/tvtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="15sp"
+                android:text="Description"
+                android:id="@+id/tvdesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:paddingLeft="240sp">
+            <RadioButton
+                    android:layout_width="30sp"
+                    android:layout_height="wrap_content" android:id="@+id/tvdone"
+                    android:clickable="true" android:shadowColor="#00EE2424"
+                    android:checked="true"
+                    android:buttonTint="@android:color/holo_red_light" android:layout_marginRight="10sp"/>/>
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:background="@android:color/background_light"
+                    android:layout_height="match_parent" app:srcCompat="@drawable/ic_delete"
+                    android:id="@+id/tvdel" android:layout_marginRight="15sp"/>
+            <ImageButton
+                    android:layout_width="wrap_content"
+                    android:background="@android:color/background_light"
+                    android:layout_height="match_parent" app:srcCompat="@drawable/ic_edit"
+                    android:id="@+id/tvedt"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
