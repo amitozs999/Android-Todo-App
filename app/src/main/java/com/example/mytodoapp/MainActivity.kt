@@ -1,17 +1,19 @@
 
 package com.example.mytodoapp
 
+import android.content.Context
 import android.content.DialogInterface
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.EditText
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.user_layout.*
+import kotlinx.android.synthetic.main.user_layout.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,10 +59,74 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+        //Submit = loginDialog.findViewById(R.id.Submit) as Button
+
+
+//        val tvdelete=findViewById<ImageButton>(R.user_layout.id.tvdel)
+//        tvdelete.setOnClickListener {
+//
+//
+//            TasksTable.deleteTask(taskdb)
+//
+//
+//
+//
+//
+//        }
 
 
 
 
+
+
+    }
+   inner class TaskAdapter( val List: ArrayList<TasksTable.Task>): RecyclerView.Adapter<TaskAdapter.myViewHolder>()
+    {
+
+
+        fun updateAdapterTask(newTaskslist:ArrayList<TasksTable.Task>)
+        {
+            List.clear()
+            List.addAll(newTaskslist)
+            notifyDataSetChanged()
+
+        }
+        inner class myViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
+            val li = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val itemView = li.inflate(R.layout.user_layout, parent, false)
+//        itemView.findViewById<ImageButton>(R.id.tvdel).setOnClickListener {
+//            var v = getItem(position).id
+//            tasks = TasksTable.deletSTask(tasksDb , v)
+//            updateTasks(tasks)
+//        }
+
+            return myViewHolder(itemView)
+        }
+
+        override fun getItemCount(): Int  = List.size
+
+        override fun onBindViewHolder(holder: myViewHolder, position: Int) {
+
+            val item1 = List[position]
+            holder.itemView.tvtitle.text = item1.title  //item1[position].titile
+            holder.itemView.tvdesc.text = item1.desc
+            holder.itemView.tvdone.isChecked=item1.done
+//
+//        holder.itemView.tvdel.setOnClickListener {
+//            TasksTable.deleteTask(db)
+//        }
+
+            holder.itemView.tvdel.setOnClickListener {
+
+                TasksTable.deleteTask(taskdb,item1.id)
+                taskList1=TasksTable.getAllTasks(taskdb)
+                updateAdapterTask(taskList1)
+
+            }
+        }
 
 
     }
@@ -104,5 +170,7 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
+
+
 }
 

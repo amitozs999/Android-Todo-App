@@ -35,13 +35,17 @@ class TasksTable {
 
         }
 
-        fun deleteTask(db: SQLiteDatabase,itemId:Int):Boolean {
-            db.delete(CMD_CREATE_TABLE,"id=?", arrayOf(itemId.toString()))
 
+        fun deleteTask(db: SQLiteDatabase) {
+            db.delete(TABLE_NAME, "done=1", null)
+        }
+        fun deleteTask(db: SQLiteDatabase, v : Int?) : Boolean {
+            db.delete(TABLE_NAME, "id = '$v'", null)
+            return true
 
-         return true
 
         }
+
         fun updateTask(db: SQLiteDatabase, task: Task) {
 
             val taskRow = ContentValues()
