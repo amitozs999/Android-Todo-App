@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.forEach
@@ -181,41 +182,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater=menuInflater
         inflater.inflate(R.menu.list_menu,menu)
-        val searchItem = menu.getItem(R.id.search_item)
-        if(searchItem != null){
-            val searchView = searchItem.actionView as SearchView
-            val editext = searchView.findViewById<EditText>()
-            editext.hint = "Search here..."
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
+         var searchItem = menu?.findItem(R.id.search_item)
 
 
-                    if(newText!!.isNotEmpty()){
-                        val search = newText.toLowerCase()
-                        recyclerView.forEach {
-                            if(it.toLowerCase().contains(search)){
-                                recyclerView.add(it)
-                            }
-                        }
-                    }else{
-                        displayList.addAll(countries)
-                    }
-                    recyclerView.adapter!!.notifyDataSetChanged()
-                    return true
-                }
-
-            })
-        }
+//        searchView.imeOptions = EditorInfo.IME_ACTION_DONE;
+//        val searchItem = menu.getItem(R.id.search_item)
+//        if(searchItem != null){
+//            val searchView = searchItem.actionView as? SearchView
+//            if (searchView != null) {
+//                searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+//            }
+//
+////            val editext = searchView.findViewById<EditText>(android.support.v7.appcompat.R.id.search_src_text)
+////            editext.hint = "Search here..."
+//
+//            searchView.setOnQueryTextListener()
+//        }
+//
 
         return super.onCreateOptionsMenu(menu)
 
         return true
-        return true
+        
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
