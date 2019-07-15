@@ -4,12 +4,14 @@ package com.example.mytodoapp
 import android.content.Context
 import android.content.DialogInterface
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     var taskList1= arrayListOf<TasksTable.Task>()
     var dbhelper=MyDbHelper(this)
     lateinit var taskdb:SQLiteDatabase
+    lateinit var searchview:SearchView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,7 +187,25 @@ class MainActivity : AppCompatActivity() {
         val inflater=menuInflater
         inflater.inflate(R.menu.list_menu,menu)
 
-         var searchItem = menu?.findItem(R.id.search_item)
+        var searchItem = menu!!.findItem(R.id.search_item)
+        searchview=MenuItemCompat.getActionView(searchItem) as SearchView
+        MenuItemCompat.setOnActionExpandListener(searchItem,object: MenuItemCompat.OnActionExpandListener{
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                toolbar.setBackgroundColor(Color.WHITE)
+
+                searchview.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                return true
+
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                return true
+            }
+
+
+        })
+
+
 
 
 //        searchView.imeOptions = EditorInfo.IME_ACTION_DONE;
@@ -203,7 +225,7 @@ class MainActivity : AppCompatActivity() {
 
         return super.onCreateOptionsMenu(menu)
 
-        return true
+
         
     }
 

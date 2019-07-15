@@ -13,7 +13,8 @@
             android:title="Search"
             android:id="@+id/search_item"
             android:icon="@drawable/ic_search"
-            app:showAsAction="always"/>
+            app:showAsAction="always|collapseActionView"
+    app:actionViewClass="android.widget.SearchView"/>
     <item
             android:title="Sort"
             android:id="@+id/sort"
