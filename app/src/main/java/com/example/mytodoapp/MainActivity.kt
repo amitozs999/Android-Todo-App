@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -128,7 +129,8 @@ class MainActivity : AppCompatActivity() {
 
             }
             holder.itemView.tvdone.setOnClickListener {
-                
+                holder.itemView.tvdone.isChecked=item1.done
+
             }
             holder.itemView.tvedt.setOnClickListener {
 
@@ -145,8 +147,9 @@ class MainActivity : AppCompatActivity() {
                 alertdialog.setView(view)
                 alertdialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
                     if (toDoTitle.text.isNotEmpty()) {
-                        holder.itemView.tvtitle.text=toDoTitle.text.toString()
-                        item1.title = toDoTitle.text.toString()
+//                        holder.itemView.tvtitle.text=toDoTitle.text.toString()
+//                        item1.title = toDoTitle.text.toString()
+//                        holder.findViewById<TextView>(R.id.tvtitle).text= toDoTitle.run { text.toString() }
 
                         TasksTable.updateTask(taskdb,TasksTable.Task(null,toDoTitle.text.toString(),false,toDoDesc.text.toString()))
                         taskList1=TasksTable.getAllTasks(taskdb)
@@ -178,6 +181,40 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater=menuInflater
         inflater.inflate(R.menu.list_menu,menu)
+        val searchItem = menu.getItem(R.id.search_item)
+        if(searchItem != null){
+            val searchView = searchItem.actionView as SearchView
+            val editext = searchView.findViewById<EditText>()
+            editext.hint = "Search here..."
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+
+
+                    if(newText!!.isNotEmpty()){
+                        val search = newText.toLowerCase()
+                        recyclerView.forEach {
+                            if(it.toLowerCase().contains(search)){
+                                recyclerView.add(it)
+                            }
+                        }
+                    }else{
+                        displayList.addAll(countries)
+                    }
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                    return true
+                }
+
+            })
+        }
+
+        return super.onCreateOptionsMenu(menu)
+
+        return true
         return true
     }
 
@@ -191,8 +228,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "share clicked", Toast.LENGTH_SHORT).show()
                 return true
             }
-            R.id.search -> {
-                Toast.makeText(this, "share clicked", Toast.LENGTH_SHORT).show()
+            R.id.search_item -> {
                 return true
             }
             R.id.exit -> {

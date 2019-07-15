@@ -11,7 +11,7 @@
             android:id="@+id/exit"/>
     <item
             android:title="Search"
-            android:id="@+id/search"
+            android:id="@+id/search_item"
             android:icon="@drawable/ic_search"
             app:showAsAction="always"/>
     <item

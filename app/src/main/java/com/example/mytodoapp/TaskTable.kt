@@ -53,6 +53,40 @@ class TasksTable {
 
             db.update(TABLE_NAME, taskRow, "id = ?", arrayOf(task.id.toString()))
         }
+        fun search(db: SQLiteDatabase, v : String) : ArrayList<Task> {
+            val tasks = ArrayList<Task>()
+
+            val cursor = db.query(
+                TABLE_NAME,
+                arrayOf("id", "task", "done","desc"),
+                "title LIKE '%$v%' AND done=0", null, //where
+                null, // group by
+                null, //having
+                null //order
+            )
+
+            if(cursor.count!=0) {
+                cursor.moveToFirst()
+
+                val idCol = cursor.getColumnIndex("id")
+                val taskCol = cursor.getColumnIndex("title")
+                val doneCol = cursor.getColumnIndex("done")
+                val descCol = cursor.getColumnIndex("desc")
+
+                do  {
+                    val task = Task(
+                        cursor.getInt(idCol),
+                        cursor.getString(taskCol),
+                        cursor.getInt(doneCol) == 1,
+                        cursor.getString(descCol)
+                    )
+                    tasks.add(task)
+                } while (cursor.moveToNext())
+                cursor.close()
+            }
+            return tasks
+        }
+
 
         fun getAllTasks(db: SQLiteDatabase): ArrayList<Task> {
 
