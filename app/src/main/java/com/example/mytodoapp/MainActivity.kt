@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     var dbhelper=MyDbHelper(this)
     lateinit var taskdb:SQLiteDatabase
     lateinit var searchview:SearchView
+    lateinit var taskadapter: TaskAdapter
 
 
 
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         taskdb=dbhelper.writableDatabase
         taskList1=TasksTable.getAllTasks(taskdb)
-        var taskadapter=TaskAdapter(taskList1)
+        taskadapter=TaskAdapter(taskList1)
 
 
 
@@ -87,10 +89,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-   inner class TaskAdapter( val List: ArrayList<TasksTable.Task>): RecyclerView.Adapter<TaskAdapter.myViewHolder>()
+   inner class TaskAdapter( val List: ArrayList<TasksTable.Task>): RecyclerView.Adapter<TaskAdapter.myViewHolder>(), Filterable
     {
 
-
+        var filterlist: List<TasksTable.Task>? = List
         fun updateAdapterTask(newTaskslist:ArrayList<TasksTable.Task>)
         {
             List.clear()
@@ -114,6 +116,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int  = List.size
+        init {
+            this.filterlist = List
+        }
+
+        override fun getFilter(): Filter {
+            return object : Filter() {
+                override fun performFiltering(charSequence: CharSequence): Filter.FilterResults {
+                    val charString = charSequence.toString()
+                    if (charString.isEmpty()) {
+
+                    } else {
+                        val filteredList = ArrayList<TasksTable.Task>()
+                        for (row in List) {
+                            if (row.title!!.toLowerCase().contains(charString.toLowerCase()) ) {
+                                filteredList.add(row)
+                            }
+                        }
+                        filterlist = filteredList
+                    }
+                    val filterResults =Filter.FilterResults()
+                    filterResults.values = filterlist
+                    return filterResults
+                }
+                override fun publishResults(charSequence: CharSequence, filterResults: Filter.FilterResults) {
+                    filterlist = filterResults.values as ArrayList<TasksTable.Task>
+                    notifyDataSetChanged()
+                }
+            }
+        }
 
         override fun onBindViewHolder(holder: myViewHolder, position: Int) {
 
@@ -191,7 +222,7 @@ class MainActivity : AppCompatActivity() {
         searchview=MenuItemCompat.getActionView(searchItem) as SearchView
         MenuItemCompat.setOnActionExpandListener(searchItem,object: MenuItemCompat.OnActionExpandListener{
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                toolbar.setBackgroundColor(Color.WHITE)
+                toolbar.setBackgroundColor(Color.BLUE)
 
                 searchview.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
                 return true
@@ -199,11 +230,34 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                toolbar.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                searchview.setQuery("",false)
                 return true
             }
 
 
+
         })
+        searchview.maxWidth= Int.MAX_VALUE
+        searchview.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+
+            override fun onQueryTextChange(p0: String): Boolean {
+                return false
+
+            }
+
+            override fun onQueryTextSubmit(p0: String): Boolean {
+
+
+                Log.d("error",p0)
+                taskadapter.filter.filter(p0)
+
+                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                recyclerView.adapter=taskadapter
+                return false
+            }
+        })
+
 
 
 
@@ -228,6 +282,7 @@ class MainActivity : AppCompatActivity() {
 
         
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
