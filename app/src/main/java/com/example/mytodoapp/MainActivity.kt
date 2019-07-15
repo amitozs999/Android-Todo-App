@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     var dbhelper=MyDbHelper(this)
     lateinit var taskdb:SQLiteDatabase
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 alertdialog.setTitle("Add New Todo")
                 val view = layoutInflater.inflate(R.layout.dialog_dashboard, null)
                 val toDoTitle = view.findViewById<EditText>(R.id.etnewtitile)
-            val toDoDesc = view.findViewById<EditText>(R.id.etnewdesc)
+                val toDoDesc = view.findViewById<EditText>(R.id.etnewdesc)
 
 
                 alertdialog.setView(view)
@@ -124,6 +125,44 @@ class MainActivity : AppCompatActivity() {
                 TasksTable.deleteTask(taskdb,item1.id)
                 taskList1=TasksTable.getAllTasks(taskdb)
                 updateAdapterTask(taskList1)
+
+            }
+            holder.itemView.tvdone.setOnClickListener {
+                
+            }
+            holder.itemView.tvedt.setOnClickListener {
+
+                var alertdialog=AlertDialog.Builder(this@MainActivity)
+                alertdialog.setTitle("Edit Todo")
+                val view = layoutInflater.inflate(R.layout.dialog_dashboard, null)
+                val toDoTitle = view.findViewById<EditText>(R.id.etnewtitile)
+                val toDoDesc = view.findViewById<EditText>(R.id.etnewdesc)
+
+
+                toDoTitle.setText(item1.title)
+                toDoDesc.setText(item1.desc)
+
+                alertdialog.setView(view)
+                alertdialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
+                    if (toDoTitle.text.isNotEmpty()) {
+                        holder.itemView.tvtitle.text=toDoTitle.text.toString()
+                        item1.title = toDoTitle.text.toString()
+
+                        TasksTable.updateTask(taskdb,TasksTable.Task(null,toDoTitle.text.toString(),false,toDoDesc.text.toString()))
+                        taskList1=TasksTable.getAllTasks(taskdb)
+                        updateAdapterTask(taskList1)
+                        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                        recyclerView.adapter=TaskAdapter(taskList1)
+
+                       notifyDataSetChanged()
+
+
+                    }
+                }
+                alertdialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
+
+                }
+                alertdialog.show()
 
             }
         }

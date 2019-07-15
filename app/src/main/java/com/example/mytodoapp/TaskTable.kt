@@ -36,9 +36,7 @@ class TasksTable {
         }
 
 
-        fun deleteTask(db: SQLiteDatabase) {
-            db.delete(TABLE_NAME, "done=1", null)
-        }
+
         fun deleteTask(db: SQLiteDatabase, v : Int?) : Boolean {
             db.delete(TABLE_NAME, "id = '$v'", null)
             return true
