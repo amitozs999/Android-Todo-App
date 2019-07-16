@@ -59,7 +59,7 @@ class TasksTable {
             val cursor = db.query(
                 TABLE_NAME,
                 arrayOf("id", "task", "done","desc"),
-                "title LIKE '%$v%' AND done=0", null, //where
+                "task LIKE '%$v%' AND done=0", null, //where
                 null, // group by
                 null, //having
                 null //order
@@ -69,7 +69,7 @@ class TasksTable {
                 cursor.moveToFirst()
 
                 val idCol = cursor.getColumnIndex("id")
-                val taskCol = cursor.getColumnIndex("title")
+                val taskCol = cursor.getColumnIndex("task")
                 val doneCol = cursor.getColumnIndex("done")
                 val descCol = cursor.getColumnIndex("desc")
 

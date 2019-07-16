@@ -89,10 +89,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-   inner class TaskAdapter( val List: ArrayList<TasksTable.Task>): RecyclerView.Adapter<TaskAdapter.myViewHolder>(), Filterable
+   inner class TaskAdapter( val List: ArrayList<TasksTable.Task>): RecyclerView.Adapter<TaskAdapter.myViewHolder>()
     {
 
-        var filterlist: List<TasksTable.Task>? = List
+
         fun updateAdapterTask(newTaskslist:ArrayList<TasksTable.Task>)
         {
             List.clear()
@@ -116,35 +116,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int  = List.size
-        init {
-            this.filterlist = List
-        }
 
-        override fun getFilter(): Filter {
-            return object : Filter() {
-                override fun performFiltering(charSequence: CharSequence): Filter.FilterResults {
-                    val charString = charSequence.toString()
-                    if (charString.isEmpty()) {
 
-                    } else {
-                        val filteredList = ArrayList<TasksTable.Task>()
-                        for (row in List) {
-                            if (row.title!!.toLowerCase().contains(charString.toLowerCase()) ) {
-                                filteredList.add(row)
-                            }
-                        }
-                        filterlist = filteredList
-                    }
-                    val filterResults =Filter.FilterResults()
-                    filterResults.values = filterlist
-                    return filterResults
-                }
-                override fun publishResults(charSequence: CharSequence, filterResults: Filter.FilterResults) {
-                    filterlist = filterResults.values as ArrayList<TasksTable.Task>
-                    notifyDataSetChanged()
-                }
-            }
-        }
+
 
         override fun onBindViewHolder(holder: myViewHolder, position: Int) {
 
@@ -217,28 +191,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater=menuInflater
         inflater.inflate(R.menu.list_menu,menu)
-
+        var filterlist = taskList1
         var searchItem = menu!!.findItem(R.id.search_item)
         searchview=MenuItemCompat.getActionView(searchItem) as SearchView
-        MenuItemCompat.setOnActionExpandListener(searchItem,object: MenuItemCompat.OnActionExpandListener{
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                toolbar.setBackgroundColor(Color.BLUE)
-
-                searchview.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-                return true
-
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                toolbar.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                searchview.setQuery("",false)
-                return true
-            }
-
-
-
-        })
-        searchview.maxWidth= Int.MAX_VALUE
         searchview.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
 
             override fun onQueryTextChange(p0: String): Boolean {
@@ -246,17 +201,28 @@ class MainActivity : AppCompatActivity() {
 
             }
 
+
+
             override fun onQueryTextSubmit(p0: String): Boolean {
-
-
+                if(p0=="") {
+                    filterlist = TasksTable.getAllTasks(taskdb)
+                } else {
+                    filterlist = TasksTable.search(taskdb, p0)
+                }
                 Log.d("error",p0)
-                taskadapter.filter.filter(p0)
+
 
                 recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-                recyclerView.adapter=taskadapter
+                recyclerView.adapter=TaskAdapter(filterlist)
+
+
                 return false
+
             }
+
+
         })
+
 
 
 
@@ -281,6 +247,11 @@ class MainActivity : AppCompatActivity() {
 
 
         
+    }
+    override fun onBackPressed(){
+        recyclerView.adapter=TaskAdapter(taskList1)
+        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+
     }
 
 
