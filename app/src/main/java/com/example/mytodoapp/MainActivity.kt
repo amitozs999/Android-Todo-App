@@ -196,6 +196,28 @@ class MainActivity : AppCompatActivity() {
         var filterlist = taskList1
         var searchItem = menu!!.findItem(R.id.search_item)
         searchview=MenuItemCompat.getActionView(searchItem) as SearchView
+
+
+        MenuItemCompat.setOnActionExpandListener(searchItem,object:MenuItemCompat.OnActionExpandListener{
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+
+
+                searchview.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                return true
+
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+
+                recyclerView.adapter=TaskAdapter(taskList1)
+                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                return true
+
+
+            }
+
+
+        })
         searchview.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
 
             override fun onQueryTextChange(p0: String): Boolean {
@@ -250,11 +272,11 @@ class MainActivity : AppCompatActivity() {
 
         
     }
-    override fun onBackPressed(){
-        recyclerView.adapter=TaskAdapter(taskList1)
-        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-
-    }
+//    override fun onBackPressed(){
+//        recyclerView.adapter=TaskAdapter(taskList1)
+//        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+//
+//    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
