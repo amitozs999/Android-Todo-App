@@ -43,6 +43,12 @@ class TasksTable {
 
 
         }
+        fun updatetodostatus(id:Int,iscompleted:Boolean)
+        {
+
+
+
+        }
 
         fun updateTask(db: SQLiteDatabase, task: Task) {
 

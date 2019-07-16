@@ -162,12 +162,14 @@ class MainActivity : AppCompatActivity() {
 //                        holder.findViewById<TextView>(R.id.tvtitle).text= toDoTitle.run { text.toString() }
 
                         TasksTable.updateTask(taskdb,TasksTable.Task(null,toDoTitle.text.toString(),false,toDoDesc.text.toString()))
+                        view.tvtitle.text=toDoTitle.text.toString()
                         taskList1=TasksTable.getAllTasks(taskdb)
                         updateAdapterTask(taskList1)
                         recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
                         recyclerView.adapter=TaskAdapter(taskList1)
 
-                       notifyDataSetChanged()
+
+
 
 
                     }
